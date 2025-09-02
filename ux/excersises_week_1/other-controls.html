@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <form>
+            <h2>Enter your comment</h2>
+            <ul>
+                <li>
+                    <label for="name">Name:</label>
+                    <input type="text" name="name" id="name" />
+                </li>
+                <li>
+                    <label for="comment">Comment:</label>
+                    <textarea
+                        name="comment"
+                        id="comment"
+                        cols="35"
+                        rows="10"
+                        maxlength="100"
+                    ></textarea>
+                </li>
+                <li>
+                    <button>Submit comment</button>
+                </li>
+            </ul>
+        </form>
+        <form>
+            <ul>
+                <li>
+                    <label for="food">Pick your favorite food:</label>
+                    <select name="food" id="food">
+                        <optgroup label="Mains">
+                            <option value="Salad">Salad</option>
+                            <option value="Curry">Curry</option>
+                            <option value="Pizza">Pizza</option>
+                            <option value="Fajitas">Fajitas</option>
+                        </optgroup>
+                        <hr />
+                        <optgroup label="Snacks">
+                            <option value="Biscuits">Biscuits</option>
+                            <option value="Crisps">Crisps</option>
+                            <option value="Fruit">Fruit</option>
+                            <option value="Breadsticks">Breadsticks</option>
+                        </optgroup>
+                    </select>
+                </li>
+                <li>
+                    <button>Submit choice</button>
+                </li>
+            </ul>
+        </form>
+        <form>
+            <ul>
+                <li>
+                    <label for="food">Enter your favorite food:</label>
+                    <input list="food-options" name="food" id="food   " />
+                    <datalist id="food-options">
+                        <option value="Salad"></option>
+                        <option value="Curry"></option>
+                        <option value="Pizza"></option>
+                        <option value="Fajitas"></option>
+                        <option value="Biscuits"></option>
+                        <option value="Crisps"></option>
+                        <option value="Fruit"></option>
+                        <option value="Breadsticks"></option>
+                    </datalist>
+                </li>
+                <li>
+                    <button>Submit choice</button>
+                </li>
+            </ul>
+        </form>
+    </body>
+</html>

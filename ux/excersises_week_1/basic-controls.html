@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <form>
+            <ul>
+                <li>
+                    <label for="ud">User ID</label>
+                    <input type="number" name="id" id="id" required />
+                </li>
+                <li>
+                    <input
+                        type="password"
+                        name="password"
+                        id="password"
+                        required
+                    />Password
+                </li>
+                <li><input type="button" value="Log IN" /></li>
+            </ul>
+        </form>
+        <form>
+            <fieldset>
+                <legend>Who is your favorite pony?</legend>
+                <ul>
+                    <li>
+                        <input
+                            type="radio"
+                            name="pony"
+                            id="pinkiepie"
+                            value="pinkiepie"
+                        />
+                        <label for="pinkie">Pinkie Pie</label>
+                    </li>
+                    <li>
+                        <input
+                            type="radio"
+                            name="pony"
+                            id="rainbowdash"
+                            value="rainbowdash"
+                        />
+                        <label for="rainbow">Rainbow Dash</label>
+                    </li>
+                    <li>
+                        <input
+                            type="radio"
+                            name="pony"
+                            id="twilightsparkle"
+                            value="twilightsparkle"
+                        />
+                        <label for="twilight">Twilight Sparkle</label>
+                    </li>
+                </ul>
+            </fieldset>
+            <fieldset>
+                <legend>Hotdog preferences</legend>
+                <ul>
+                    <li>
+                        <input
+                            type="radio"
+                            name="hotdog"
+                            id="vegan"
+                            value="vegan"
+                        />
+                        <label for="vegan">Vegan</label>
+                    </li>
+                    <li>
+                        <input
+                            type="radio"
+                            name="hotdog"
+                            id="onions"
+                            value="onions"
+                        />
+                        <label for="onions">Onions</label>
+                    </li>
+                </ul>
+            </fieldset>
+            <button>Submit</button>
+        </form>
+        <form>
+            <ul>
+                <li>
+                    <label for="gallery-img"
+                        >Choose gallery images to upload</label
+                    >
+                    <input
+                        type="file"
+                        name="file"
+                        id="file"
+                        accept="image/png, image/jpeg"
+                        multiple
+                    />
+                </li>
+            </ul>
+            <button>Submit</button>
+        </form>
+    </body>
+</html>
