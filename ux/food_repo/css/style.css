@@ -1,0 +1,18 @@
+@import "variables.css";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    > header,
+    > footer {
+        background-color: var(--seal-brown);
+        color: var(--sage);
+        padding: 0.5rem 1rem;
+        text-align: center;
+        font-family: "Poppins", sans-serif;
+    }
+}
