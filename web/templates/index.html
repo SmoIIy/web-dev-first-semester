@@ -8,9 +8,45 @@
             href="{{ url_for('static', filename='app.css') }}"
         />
         <script defer src="{{ url_for('static', filename='app.js') }}"></script>
-        <title>App</title>
+        <title>Twitter</title>
     </head>
     <body>
-        <h1>{{name}}</h1>
+        <header>
+            <a href="/{{user.user_username}}">X</a>
+            <div class="actions">
+                <div>Login</div>
+                <button>Signup</button>
+            </div>
+        </header>
+        <banner>
+            <img
+                src="https://picsum.photos/id/0/300/200"
+                alt=""
+                class="banner"
+            />
+            <img
+                src="https://picsum.photos/id/64/200/300"
+                alt=""
+                class="avatar"
+            />
+        </banner>
+        <main>
+            <section class="data">
+                <button>Follow</button>
+            </section>
+            <section>
+                <p class="name">
+                    {{ user.user_first_name}} {{ user.user_last_name}}
+                </p>
+                <p class="username">@{{ user.user_username }}</p>
+            </section>
+            <section class="bio">
+                <p>{{user.user_bio}}</p>
+                <a target="_blank" href="https://{{user.user_website}}"
+                    >{{user.user_website}}</a
+                >
+            </section>
+        </main>
+        <footer></footer>
     </body>
 </html>
