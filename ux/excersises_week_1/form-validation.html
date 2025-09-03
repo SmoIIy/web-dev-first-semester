@@ -4,26 +4,108 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
+        <style>
+            body {
+                background-color: #fff;
+                color: #333;
+                font: 1em / 1.4 Helvetica Neue, Helvetica, Arial, sans-serif;
+                padding: 1em;
+                margin: 0;
+            }
+
+            * {
+                box-sizing: border-box;
+            }
+            textarea:valid,
+            input:valid {
+                outline: green 1px solid;
+                border: none;
+            }
+            textarea:valid,
+            input:invalid {
+                outline: red 1px solid;
+                border: none;
+            }
+        </style>
+        <script type="module" src="script.js"></script>
     </head>
     <body>
         <form>
-            <fieldset class="personal-details">
-                <legend>Personal Details</legend>
-                <label for name>Name:</label>
-                <input type="text" id="name" name="name" />
-
-                <label for="age">Age:</label>
-                <input type="number" id="age" name="age" />
-            </fieldset>
-
-            <fieldset class="comment-section">
-                <legend>Comment Section</legend>
-                <label for="comment">Comment:</label>
-                <input type="text" id="comment" name="comment" />
-
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" />
-            </fieldset>
+            <h2>Enter your support query</h2>
+            <ul>
+                <li>
+                    <label for="uname">User name:</label>
+                    <input
+                        type="text"
+                        name="uname"
+                        id="uname"
+                        required
+                        minlength="5"
+                        maxlength="20"
+                        pattern="^[a-z]\.[a-z0-9]{3,}$"
+                    />
+                </li>
+                <li>
+                    <label for="email">Email address:</label>
+                    <input
+                        type="email"
+                        name="email"
+                        id="email"
+                        required
+                        pattern="^[a-z0-9](@bigcorp.eu)"
+                    />
+                </li>
+                <li>
+                    <label for="phone">Phone number:</label>
+                    <input
+                        type="tel"
+                        name="phone"
+                        id="phone"
+                        required
+                        pattern="[0-9]{3}[ -.]?[0-9]{3}[ -.]?[0-9]{4}"
+                    />
+                </li>
+                <li>
+                    <label for="comment">Comment:</label>
+                    <textarea
+                        name="comment"
+                        id="comment"
+                        required
+                        maxlength="200"
+                    >
+                    </textarea>
+                </li>
+                <li>
+                    <button>Submit comment</button>
+                </li>
+            </ul>
         </form>
+        <form class="email-form">
+            <label for="mail">Email-adress:</label>
+            <input type="text" id="mail" name="mail" required />
+            <button>Submit</button>
+            <p id="error"></p>
+        </form>
+        <script>
+            document
+                .querySelector(".email-form")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+
+                    const email = document.getElementById("mail").value.trim();
+                    const error = document.getElementById("error");
+                    const emailregex =
+                        "/^w+([.-]?w+)*@w+([.-]?w+)*(.w{2,3})+$/";
+
+                    if (!email.match(emailregex)) {
+                        error.innerText = "The email-adress is not valid";
+                    } else if (email.length < 10) {
+                        error.innerText =
+                            "The email address must be at least 10 characters long";
+                    } else {
+                        error.innerText = "";
+                    }
+                });
+        </script>
     </body>
 </html>
