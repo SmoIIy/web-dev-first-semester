@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Temp Converter</title>
+		<script type="module" src="temp.js"></script>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/gh/digitallytailored/classless@latest/classless.min.css"
+		/>
+	</head>
+	<body>
+		<h1>Temperature Converter</h1>
+		<form class="temp-form">
+			<label for="convert-input">Convert</label>
+			<input
+				type="number"
+				name="convert-input"
+				id="convert-input"
+				step="0.01"
+				value="100"
+			/>
+			<section class="selection">
+				<label for="from">From</label>
+				<select name="from" id="from">
+					<option selected value="celcius">Celcius</option>
+					<option value="fahrenheit">Fahrenheit</option>
+					<option value="kelvin">Kelvin</option>
+				</select>
+				<label for="to">To</label>
+				<select name="to" id="to">
+					<option selected value="celcius">Celcius</option>
+					<option value="fahrenheit">Fahrenheit</option>
+					<option value="kelvin">Kelvin</option>
+				</select>
+			</section>
+			<input class="info" type="submit" value="Calculate" />
+		</form>
+		<h2>
+			<span id="initial-value">0</span> =
+			<span id="converted-value">0</span>
+		</h2>
+	</body>
+</html>
