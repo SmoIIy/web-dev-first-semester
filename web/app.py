@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 
 from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True)
@@ -117,7 +117,7 @@ def post_signup():
         q = 'INSERT INTO users VALUES(NULL, %s, %s)'
         cursor.execute(q, (user_email, hashed_password))
         db.commit()
-        return "true"
+        return redirect(url_for("view_index"))
     except Exception as ex:
         ic(ex)
         return str(ex)
@@ -140,7 +140,7 @@ def unlike_tweet():
 ##############################
 @app.put("/profile")
 def update_profile():
-    pass
+    return "profile"
 
 # GET       Is to get html
 # POST      Is used for saving data in the system
