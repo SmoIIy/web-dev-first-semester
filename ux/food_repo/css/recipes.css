@@ -1,0 +1,28 @@
+@import "style.css";
+
+:root {
+    --thumbnailDimension: 200px;
+}
+
+article {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    img {
+        width: var(--thumbnailDimension);
+        height: var(--thumbnailDimension);
+    }
+    .recipe-attribute {
+        border-radius: 1rem;
+        padding: 0 1rem;
+        color: var(--sage);
+
+        &.recipe-area {
+            background-color: var(--black-olive);
+        }
+        &.recipe-category {
+            background-color: var(--ebony);
+        }
+    }
+}
