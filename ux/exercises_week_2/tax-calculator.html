@@ -5,13 +5,24 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Tax Calculator</title>
         <script type="module" src="script.js"></script>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/digitallytailored/classless@latest/classless.min.css"
+        />
     </head>
     <body>
         <section>
             <form class="tax-form">
                 <h1>Tax Calculator</h1>
                 <label for="amount">Monitary Amount</label>
-                <input type="number" name="amount" id="amount" step="0.01" />
+                <input
+                    type="number"
+                    name="amount"
+                    id="amount"
+                    step="0.01"
+                    required
+                    value="0"
+                />
                 <label for="percentage">Tax Percentage</label>
                 <input
                     type="number"
@@ -19,9 +30,12 @@
                     id="percentage"
                     step="0.01"
                     max="100"
+                    required
+                    value="0"
                 />
                 <input type="submit" value="Calculate" />
             </form>
+            <hr />
             <p>Tax Amount: <span id="tax-amount">0</span></p>
             <p>Final Amount: <span id="final-amount">0</span></p>
         </section>
