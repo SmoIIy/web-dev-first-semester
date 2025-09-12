@@ -1,0 +1,85 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font: inherit;
+    font-size: 1.1rem;
+}
+
+:root {
+    --main-font: "Inter", sans-serif;
+    --inverse-color: white;
+}
+
+body {
+    font-family: var(--main-font);
+    & > * {
+        width: min(100%, 65ch);
+        margin-inline: auto;
+    }
+}
+h1 {
+    font-size: 3rem;
+}
+p {
+    font-weight: 300;
+}
+label {
+    font-weight: 200;
+}
+header {
+    background-color: darkblue;
+    color: var(--inverse-color);
+    padding: 0.5rem 1rem;
+}
+button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+form {
+    padding: 1rem;
+    .form-group {
+        margin-block: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        input {
+            flex-grow: 3;
+            &[type="number"] {
+                flex-grow: 0;
+            }
+        }
+        label {
+            flex-grow: 1;
+            flex-basis: 150px;
+        }
+    }
+    input[type="submit"] {
+        border-radius: 0.5rem;
+        appearance: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: all 200ms ease;
+        &:hover {
+            border-radius: 0.7rem;
+            background-color: blanchedalmond;
+        }
+    }
+}
+
+#cd-list {
+    & > * {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 2rem;
+        & > * {
+            border-right: white 1px solid;
+            padding-left: 1rem;
+        }
+    }
+}

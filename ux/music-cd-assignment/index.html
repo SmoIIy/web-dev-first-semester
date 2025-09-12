@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Music CDs</title>
+        <script type="module" src="/js/script.js"></script>
+        <link rel="stylesheet" href="/css/style.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Music CDS</h1>
+        </header>
+        <main>
+            <form>
+                <section class="form-group">
+                    <label for="author">Author</label>
+                    <input type="text" name="author" id="author" />
+                </section>
+                <section class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" />
+                </section>
+                <section class="form-group">
+                    <label for="year">Year</label>
+                    <input type="number" name="year" id="year" />
+                </section>
+                <input type="submit" value="Add" />
+            </form>
+            <section id="cd-list">
+                <header>
+                    <p>Author</p>
+                    <p>Title</p>
+                    <p>Year</p>
+                </header>
+            </section>
+        </main>
+    </body>
+</html>
