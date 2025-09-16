@@ -1,179 +1,152 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for
+from flask_session import Session
+from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash
+import x 
+import time
+import uuid
+import os
 
 from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True)
 
-
-import x
-
 app = Flask(__name__)
 
+# Set the maximum file size to 10 MB
+app.config['MAX_CONTENT_LENGTH'] = 1 * 1024 * 1024   # 1 MB
+
+app.config['SESSION_TYPE'] = 'filesystem'
+Session(app)
+ 
 
 ##############################
+##############################
+##############################
+def _____USER_____(): pass 
+##############################
+##############################
+##############################
+
 @app.get("/")
 def view_index():
-    try:
-        return render_template("view_login.html")
-    except:
-        # wrong
-        pass
-    finally:
-        # happens after try or except
-        pass
+    return render_template("index.html")
+
 
 ##############################
 @app.get("/signup")
 def view_signup():
+    return render_template("signup.html")
+
+##############################
+@app.get("/login")
+def view_login():
+    return render_template("login.html")
+
+##############################
+@app.post("/login")
+def handle_login():
     try:
-        return render_template("signup.html")
-        pass
-    except:
-        pass
+        user_email = x.validate_user_email()
+        user_password = x.validate_user_password()
+        ic(user_email, " ", user_password)
+        db, cursor = x.db()
+        q = "SELECT * FROM users WHERE user_email = %s and user_password = %s"
+        cursor.execute(q, (user_email, user_password))
+        user = cursor.fetchone()
+        if not user: raise Exception("user not found", 400)
+        session["user"] = user
+        return redirect(url_for("view_home"))
+    except Exception as ex:
+        ic(ex)
+        if ex.args[1] == 400: return ex.args[0]
+        return "System under maintenance", 500
     finally:
-        pass
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
 
 ##############################
 @app.get("/home")
+@x.no_cache
 def view_home():
-    pass
-
-##############################
-# @app.get("/explore")
-# def view_explore():
-#     pass
-
-##############################
-@app.get("/messages")
-def view_messages():
-    pass
-
-##############################
-@app.get("/notifications")
-def view_notifications():
-    pass
-
-##############################
-@app.get("/bookmarks")
-def view_explore():
-    pass
-
-##############################
-@app.get("/profile")
-def view_profile():
-    pass
-
-##############################
-@app.get("/lists")
-def view_lists():
-    pass
-
-##############################
-@app.get("/more")
-def view_more():
-    pass
-
-##############################
-##############################
-##############################
-@app.post("/tweet")
-def post_tweet():
-    pass
-
-##############################
-##############################
-##############################
-@app.post("/search")
-def post_search():
-    pass
-
-##############################
-##############################
-##############################
-@app.post("/login")
-def post_login():
-    try:
-        user_email = request.form.get("user_email", "")
-        user_password = request.form.get("user_password", "")
-        return f"{user_email} {user_password}"
-    except: 
-        pass
-    finally:
-        pass
-
-
+    user = session.get("user", "")
+    if not user: return redirect(url_for("view_login"))
+    return render_template("home.html", user=user)
 
 
 ##############################
-##############################
+@app.get("/logout")
+def view_logout():
+    session.clear()
+    return redirect(url_for("view_login"))
+
 ##############################
 @app.post("/signup")
-def post_signup():
+def handle_signup():
     try:
-        user_email = request.form.get("user_email", "")
-        user_password = request.form.get("user_password", "")
-        hashed_password = x.hash_password(user_password)
+        # Validate user name
+        user_name = request.form.get("user_name", "").strip()
+        x.validate_user_name(user_name)
+        user_first_name = request.form.get("user_first_name", "").strip()
+        user_email = request.form.get("user_email", "").strip()
+        x.validate_user_first_name(user_first_name)
+        user_email = x.validate_user_email()
         db, cursor = x.db()
-        # INSERT INTO users VALUES(NULL, "@b", "secret")
-        q = 'INSERT INTO users VALUES(NULL, %s, %s)'
-        cursor.execute(q, (user_email, hashed_password))
+        user_password = request.form.get("user_password", "").strip()
+        hashed_password = x.hash_password(user_password)
+        db.start_transaction()
+        q = "INSERT INTO users VALUES(null, %s, %s, %s, %s)"
+        cursor.execute(q, (user_name, user_first_name, user_email, hashed_password))
+        inserted_rows = cursor.rowcount
         db.commit()
-        return redirect(url_for("view_index"))
+        return f"Total rows inserted: {inserted_rows}"
     except Exception as ex:
         ic(ex)
-        return str(ex)
+        if "db" in locals(): db.rollback()
+
+        if "twitter exception - user name too short" in str(ex):
+            return "name too short", 400
+
+        if "twitter exception - user name too long" in str(ex):
+            return "name too long", 400
+
+        if "twitter exception - user first name too short" in str(ex):
+            return "first name too short", 400
+
+        if "twitter exception - user first name too long" in str(ex):
+            return "first name too long", 400
+
+        if "Twitter exception - Invalid email" in str(ex):
+            return "Invalid email", 400
+
+        if "Duplicate entry" and user_name in str(ex):
+            return "username already registered", 400
+        
+        if "Duplicate entry" and user_email in str(ex):
+            return "email already registered", 400   
+
+        return "System under maintainance", 500
     finally:
-        if "cursor" in locals():
-            cursor.close()
-        if "db" in locals():
-            db.close()
-
-
-##############################
-##############################
-##############################
-@app.delete("/delete")
-def unlike_tweet():
-    pass
-
-##############################
-##############################
-##############################
-@app.put("/profile")
-def update_profile():
-    return "profile"
-
-# GET       Is to get html
-# POST      Is used for saving data in the system
-# Put       Is used to update all rows except the ID
-# Patch     Is used to update on or more cell
-# Delete    Is used to delete a resource
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
 
 
 
 
-# Main page
-# friendly url inspired by twitter.com
-# 127.0.0.1/whatever 
-"""
-@app.get("/<username>")
-def view_index(username):
-    db, cursor = x.db()
-    q = "SELECT * FROM users WHERE user_username = %s"
-    cursor.execute(q, (username,))
-    user = cursor.fetchone()
-    ic(user)
-    if user:
-        return render_template("index.html", user = user)
-    return "Ja der findes jo ikk en bruger med det username din FUCKING idiot"
-"""
 
-# 127.0.0.1/search?first-name
-# in flask, args is everything after the questionmark
-# @app.get("/search")
-# def view_search():
-#     name = request.args.get("first-name", "")
-#     last_name = request.args.get("last-name", "")
-#     year = request.args.get("year", "")
-#     fav_color = request.args.get("fav-color", "")
-#     return f"Hi {name} {last_name}, the year is {year}. My favorite color is {fav_color}"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

@@ -1,0 +1,77 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 1.1rem;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+img {
+    width: 100%;
+}
+
+body {
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    > :first-child {
+        margin-right: auto;
+    }
+    .actions {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+}
+button {
+    appearance: unset;
+    background-color: black;
+    color: white;
+    border-radius: 16px;
+    border: none;
+    outline: none;
+    padding: 0.3rem 1rem;
+}
+banner {
+    display: block;
+    height: 160px;
+    width: 100%;
+    position: relative;
+    .banner {
+        object-fit: cover;
+        height: 100%;
+    }
+    .avatar {
+        position: absolute;
+        height: 80px;
+        width: 80px;
+        object-fit: cover;
+        border-radius: 100%;
+        aspect-ratio: 1/1;
+        bottom: -24px;
+        left: 24px;
+    }
+}
+main {
+    padding: 1rem;
+    .data {
+        display: flex;
+        button {
+            margin-left: auto;
+        }
+    }
+    .name {
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+    .username {
+        font-weight: 200;
+        font-size: 0.8rem;
+    }
+}
+.bio {
+    margin-top: 1rem;
+}

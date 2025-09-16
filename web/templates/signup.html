@@ -4,27 +4,28 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Signup</title>
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/gh/digitallytailored/classless@latest/classless.min.css"
-        />
     </head>
     <body>
-        <h1>Sign Up</h1>
+        <h1>Signup</h1>
+
         <form action="/signup" method="POST">
+            <label for="">min 2 max 20</label>
+            <input name="user_name" type="text" placeholder="user name" />
+
             <input
-                type="email"
-                name="user_email"
-                id="user_email"
-                placeholder="email"
+                name="user_first_name"
+                type="text"
+                placeholder="user first name"
             />
+
+            <input name="user_email" type="text" placeholder="user email" />
             <input
-                type="password"
                 name="user_password"
-                id="user_password"
-                placeholder="password"
+                type="text"
+                placeholder="user password"
             />
-            <input type="submit" value="Sign up" />
+
+            <button>Signup</button>
         </form>
     </body>
 </html>
