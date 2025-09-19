@@ -6,8 +6,8 @@ document.querySelector("form").addEventListener("submit", function (e) {
     const list = document.querySelector("#cd-list");
     const article = document.createElement("article");
     article.innerHTML = `
-        <p>${formDataObject.title}</p>
         <p>${formDataObject.author}</p>
+        <p>${formDataObject.title}</p>
         <p>${formDataObject.year}</p>
         <button class="delete-button"><!--
 category: System
