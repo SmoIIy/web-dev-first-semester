@@ -1,6 +1,5 @@
 from flask import request, make_response, render_template
 import mysql.connector
-import hashlib
 import re 
 from functools import wraps
  
@@ -26,33 +25,6 @@ def db():
 
 
 ##############################
-USER_NAME_MIN = 2
-USER_NAME_MAX = 20
-def validate_user_name(user_name):
-    if len(user_name) < USER_NAME_MIN: 
-        raise Exception("twitter exception - user name too short")
-    if len(user_name) > USER_NAME_MAX:
-        raise Exception("twitter exception - user name too long")
-    return True
-
-##############################
-USER_FIRST_NAME_MIN = 2
-USER_FIRST_NAME_MAX = 20
-def validate_user_first_name(user_first_name):
-    if len(user_first_name) < USER_FIRST_NAME_MIN: 
-        raise Exception("twitter exception - user first name too short")
-    if len(user_first_name) > USER_FIRST_NAME_MAX:
-        raise Exception("twitter exception - user first name too long")
-    return True
-
-##############################
-def hash_password(password):
-    sha256_hash = hashlib.sha256()
-    sha256_hash.update(password.encode('utf-8'))
-    return sha256_hash.hexdigest()
-
-
-##############################
 def no_cache(view):
     @wraps(view)
     def no_cache_view(*args, **kwargs):
@@ -72,6 +44,27 @@ def validate_user_email():
     return user_email
 
 ##############################
+USER_USERNAME_MIN = 2
+USER_USERNAME_MAX = 20
+def validate_user_username():
+    user_username = request.form.get("user_username", "").strip()
+    error = f"username min {USER_USERNAME_MIN} max {USER_USERNAME_MAX} characters"
+    if len(user_username) < USER_USERNAME_MIN: raise Exception(error, 400)
+    if len(user_username) > USER_USERNAME_MAX: raise Exception(error, 400)
+    return user_username
+
+##############################
+USER_FIRST_NAME_MIN = 2
+USER_FIRST_NAME_MAX = 20
+def validate_user_first_name():
+    user_first_name = request.form.get("user_first_name", "").strip()
+    error = f"first name min {USER_FIRST_NAME_MIN} max {USER_FIRST_NAME_MAX} characters"
+    if len(user_first_name) < USER_FIRST_NAME_MIN: raise Exception(error, 400)
+    if len(user_first_name) > USER_FIRST_NAME_MAX: raise Exception(error, 400)
+    return user_first_name
+
+
+##############################
 USER_PASSWORD_MIN = 6
 USER_PASSWORD_MAX = 50
 REGEX_USER_PASSWORD = f"^.{{{USER_PASSWORD_MIN},{USER_PASSWORD_MAX}}}$"
@@ -79,6 +72,8 @@ def validate_user_password():
     user_password = request.form.get("user_password", "").strip()
     if not re.match(REGEX_USER_PASSWORD, user_password): raise Exception("Invalid password", 400)
     return user_password
+
+
 
 
 ##############################

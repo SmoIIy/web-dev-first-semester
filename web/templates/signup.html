@@ -1,31 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Signup</title>
-    </head>
-    <body>
-        <h1>Signup</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+</head>
+<body>
 
-        <form action="/signup" method="POST">
-            <label for="">min 2 max 20</label>
-            <input name="user_name" type="text" placeholder="user name" />
+    <h1>
+        Signup
+    </h1>
 
-            <input
-                name="user_first_name"
-                type="text"
-                placeholder="user first name"
-            />
+    <h2>
+        {{ message }}
+    </h2>
 
-            <input name="user_email" type="text" placeholder="user email" />
-            <input
-                name="user_password"
-                type="text"
-                placeholder="user password"
-            />
-
-            <button>Signup</button>
-        </form>
-    </body>
+    <form action="/signup" method="POST">
+        <input name="user_email" type="text" placeholder="email" value="a@a.com">
+        <input name="user_username" type="text" placeholder="username" value="santi">
+        <input name="user_first_name" type="text" placeholder="user_first_name" value="Santiago">
+        <input name="user_password" type="text" placeholder="password" value="password">
+        <button>
+            Signup
+        </button>
+    </form>
+    
+</body>
 </html>

@@ -29,36 +29,76 @@ def _____USER_____(): pass
 
 @app.get("/")
 def view_index():
+   
     return render_template("index.html")
-
-
-##############################
-@app.get("/signup")
-def view_signup():
-    return render_template("signup.html")
 
 ##############################
 @app.get("/login")
 def view_login():
-    return render_template("login.html")
+    if session.get("user", ""): return redirect(url_for("view_home"))
+
+    message = request.args.get("message", "")
+    return render_template("login.html", message=message)
 
 ##############################
 @app.post("/login")
 def handle_login():
     try:
+        # Validate
         user_email = x.validate_user_email()
         user_password = x.validate_user_password()
-        ic(user_email, " ", user_password)
+        # Connect to the database
+        q = "SELECT * FROM users WHERE user_email = %s"
         db, cursor = x.db()
-        q = "SELECT * FROM users WHERE user_email = %s and user_password = %s"
-        cursor.execute(q, (user_email, user_password))
+        cursor.execute(q, (user_email,))
         user = cursor.fetchone()
-        if not user: raise Exception("user not found", 400)
+        if not user: raise Exception("User not found", 400)
+
+        if not check_password_hash(user["user_password"], user_password):
+            raise Exception("Invalid credentials", 400)
+
+        user.pop("user_password")
+
         session["user"] = user
         return redirect(url_for("view_home"))
+
     except Exception as ex:
         ic(ex)
-        if ex.args[1] == 400: return ex.args[0]
+        if ex.args[1] == 400: return redirect(url_for("view_login", message=ex.args[0]))
+        return "System under maintenance", 500
+    finally:
+        if "cursor" in locals(): cursor.close()
+        if "db" in locals(): db.close()
+
+##############################
+@app.get("/signup")
+def view_signup():
+    message = request.args.get("message", "")
+    return render_template("signup.html", message=message)
+
+##############################
+@app.post("/signup")
+def handle_signup():
+    try:
+        # Validate
+        user_email = x.validate_user_email()
+        user_password = x.validate_user_password()
+        user_username = x.validate_user_username()
+        user_first_name = x.validate_user_first_name()
+
+        user_hashed_password = generate_password_hash(user_password)
+
+        # Connect to the database
+        q = "INSERT INTO users VALUES(%s, %s, %s, %s, %s)"
+        db, cursor = x.db()
+        cursor.execute(q, (None, user_email, user_hashed_password, user_username, user_first_name))
+        db.commit()
+        return redirect(url_for("view_login", message="Signup successful. Proceed to login"))
+    except Exception as ex:
+        ic(ex)
+        if ex.args[1] == 400: return redirect(url_for("view_signup", message=ex.args[0]))
+        if "Duplicate entry" and user_email in str(ex): return redirect(url_for("view_signup", message="Email already registered"))
+        if "Duplicate entry" and user_username in str(ex): return redirect(url_for("view_signup", message="username already registered"))
         return "System under maintenance", 500
     finally:
         if "cursor" in locals(): cursor.close()
@@ -69,63 +109,32 @@ def handle_login():
 @app.get("/home")
 @x.no_cache
 def view_home():
-    user = session.get("user", "")
-    if not user: return redirect(url_for("view_login"))
-    return render_template("home.html", user=user)
-
-
-##############################
-@app.get("/logout")
-def view_logout():
-    session.clear()
-    return redirect(url_for("view_login"))
-
-##############################
-@app.post("/signup")
-def handle_signup():
     try:
-        # Validate user name
-        user_name = request.form.get("user_name", "").strip()
-        x.validate_user_name(user_name)
-        user_first_name = request.form.get("user_first_name", "").strip()
-        user_email = request.form.get("user_email", "").strip()
-        x.validate_user_first_name(user_first_name)
-        user_email = x.validate_user_email()
+        # user = session.get("user", "")
+        # if not user: return redirect(url_for("view_login"))
         db, cursor = x.db()
-        user_password = request.form.get("user_password", "").strip()
-        hashed_password = x.hash_password(user_password)
-        db.start_transaction()
-        q = "INSERT INTO users VALUES(null, %s, %s, %s, %s)"
-        cursor.execute(q, (user_name, user_first_name, user_email, hashed_password))
-        inserted_rows = cursor.rowcount
-        db.commit()
-        return f"Total rows inserted: {inserted_rows}"
+        q = "SELECT * FROM users JOIN posts ON user_pk = post_user_fk ORDER BY RAND() LIMIT 5"
+        cursor.execute(q)
+        tweets = cursor.fetchall()
+        ic(tweets)
+
+        q = "SELECT * FROM trends ORDER BY RAND() LIMIT 3"
+        cursor.execute(q)
+        trends = cursor.fetchall()
+        ic(trends)
+
+
+
+        q = "SELECT * FROM users WHERE user_pk != 1 ORDER BY RAND() LIMIT 3"
+        cursor.execute(q)
+        suggestions = cursor.fetchall()
+        ic(suggestions)
+
+
+        return render_template("home.html", tweets=tweets, trends=trends)
     except Exception as ex:
         ic(ex)
-        if "db" in locals(): db.rollback()
-
-        if "twitter exception - user name too short" in str(ex):
-            return "name too short", 400
-
-        if "twitter exception - user name too long" in str(ex):
-            return "name too long", 400
-
-        if "twitter exception - user first name too short" in str(ex):
-            return "first name too short", 400
-
-        if "twitter exception - user first name too long" in str(ex):
-            return "first name too long", 400
-
-        if "Twitter exception - Invalid email" in str(ex):
-            return "Invalid email", 400
-
-        if "Duplicate entry" and user_name in str(ex):
-            return "username already registered", 400
-        
-        if "Duplicate entry" and user_email in str(ex):
-            return "email already registered", 400   
-
-        return "System under maintainance", 500
+        return "error"
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
@@ -133,7 +142,17 @@ def handle_signup():
 
 
 
-
+##############################
+@app.get("/logout")
+def handle_logout():
+    try:
+        session.clear()
+        return redirect(url_for("view_login"))
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
 
 

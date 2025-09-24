@@ -86,57 +86,17 @@
         </div>                      
     </div>
     
+
+
     <div class="main_two">
-        <div class="post">
-            <div class="left">
-                <img src="{{ url_for('static', filename='images/avatar_2.jpg') }}">
-            </div>
-            <div class="right">
-                <div>
-                    <span>Nick Som</span>
-                    <span class="username">@nsom</span>
-                </div>
-                <div class="content">
-                    Can anyone explain what Charlie Kirk’s two “security guards” to his back right were doing the 
-                    seconds before he was fatally shot? One grabs his cap and tugs his ear, then intently films… 
-                    looking to the other, who does something blatantly odd with his arms… then the shot rings                    
-                </div>
-            </div>
-        </div>
-        <div class="post">
-            <div class="left">
-                <img src="{{ url_for('static', filename='images/avatar_5.jpg') }}">
-            </div>
-            <div class="right">
-                <div>
-                    <span>Vue</span>
-                    <span class="username">@vuejs</span>
-                </div>
-                <div class="content">
-                    We just added a "Plugins Collection" to the ecosystem dropdown on http://vuejs.org. 
-                    This is a curated collection of Vue libraries, utilities and components with stats 
-                    and sorting, maintained by @jacobandrewsky
-                    <img src="{{ url_for('static', filename='images/post_image_1.jpg') }}">
-                </div>
-            </div>
-        </div> 
-        <div class="post">
-            <div class="left">
-                <img src="{{ url_for('static', filename='images/avatar_6.jpg') }}">
-            </div>
-            <div class="right">
-                <div>
-                    <span>BBC News</span>
-                    <span class="username">@BBCworld</span>
-                </div>
-                <div class="content">
-                    North Korea executing more people for watching foreign films and TV, UN finds
-                    <img src="{{ url_for('static', filename='images/post_image_2.jpg') }}">
-                </div>
-            </div>
-        </div>                 
+        {% for i in range(10): %}
+            {% include "_tweet.html" %}
+        {% endfor %}
+
     </div>
     
+
+
     <div class="main_three">
         3
     </div>
