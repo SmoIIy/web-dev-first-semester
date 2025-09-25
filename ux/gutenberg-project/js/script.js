@@ -9,6 +9,7 @@ const renderBookList = () => {
     books.forEach((book) => {
         const article = document.createElement("article");
         const title = document.createElement("h4");
+        const author = document.createElement("h5");
         const image = document.createElement("img");
         const description = document.createElement("p");
         const link = document.createElement("a");
@@ -17,10 +18,12 @@ const renderBookList = () => {
             : (description.innerText = "No Description Provided");
         title.innerText = book.title;
         image.setAttribute("src", book.formats["image/jpeg"]);
+        author.innerText = book.authors[0] ? book.authors[0].name : "";
         link.innerText = "Link";
         link.setAttribute("href", book.formats["text/plain; charset=us-ascii"]);
 
         article.append(title);
+        article.append(author);
         article.append(image);
         article.append(description);
         article.append(link);
