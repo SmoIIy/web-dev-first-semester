@@ -160,11 +160,87 @@ def handle_logout():
 
 
 
+##############################
+@app.get("/ajax")
+def view_ajax():
+    try: 
+        return render_template("ajax.html")
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
 
+##############################
+@app.get("/tweet")
+def get_tweet():
+    try:
+        return "tweet"
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
+##############################
+@app.get("/ajax-post")
+def view_ajax_post():
+    try: 
+        return render_template("ajax_post.html")
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
+##############################
+@app.post("/save")
+def handle_save_post():
+    try: 
+        user_name = request.form.get("user_name", "give me a name")
+        user_last_name = request.form.get("user_last_name", "give me a last name")
+        # Dictionary in python  is JSON in javascript
+        user = {
+            "user_name": user_name.title(),
+            "last_name" : user_last_name.upper()
+        }
+       
+        return user
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
+##############################
+@app.get("/ajax-heart")
+def view_ajax_heart():
+    try: 
+        return render_template("ajax_heart.html")
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
+
+##############################
+@app.get("/api-like-tweet")
+def handle_like_tweet():
+    try: 
+        # TODO: Validate the data
+        # TODO: Get the logged user id
+        # TODO: Connect to the database
+        # TODO: Insert the liking of a tweet in the table
+        # TODO: Check that everything went as expected
+        # TODO: Disconnect from the database
+        # TODO: Reply to the browser information that the tweet is liked
+        return {"status": "ok"}
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
 
 
