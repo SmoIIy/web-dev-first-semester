@@ -5,5 +5,5 @@ export const IMAGE_URL = "https://image.tmdb.org/t/p/w500/";
 export const getMovieList = async (endpoint) => {
     const conn = await fetch(`${BASE_URL}${endpoint}?api_key=${API_KEY}`);
     const response = await conn.json();
-    console.log(response);
+    return response;
 };
