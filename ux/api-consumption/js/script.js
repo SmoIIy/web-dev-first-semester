@@ -3,6 +3,7 @@ import { getMovieList, IMAGE_URL } from "./modules.js";
 
 const template = document.querySelector("#movielist template");
 const container = document.querySelector("#movielist");
+const navButtons = document.querySelectorAll("nav button");
 
 const renderMovieList = async (category) => {
     container.querySelectorAll(".list-item").forEach((el) => el.remove());
@@ -30,9 +31,11 @@ const renderMovieList = async (category) => {
         console.log(result);
     });
 };
-document.querySelectorAll("nav button").forEach((btn) => {
+navButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
         const category = btn.dataset.category;
+        navButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
         renderMovieList(category);
     });
 });
