@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Restaurant | Contact</title>
+        <link rel="stylesheet" href="css/styles.css" />
+    </head>
+    <body>
+        <header>
+            <section><h1>Restaurant EK</h1></section>
+            <section>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="menu.html">Menu</a></li>
+                        <li>
+                            <a class="active" href="contact.html">Contact</a>
+                        </li>
+                    </ul>
+                </nav>
+            </section>
+        </header>
+        <main class="container contact">
+            <section>
+                <article>
+                    <p>Guldbergsgade 29N</p>
+                    <p>2200 Copenhagen</p>
+                    <p>Phone no.: <span class="highlight">20 82 53 70</span></p>
+                    <p>
+                        E-mail:
+                        <span class="highlight">info@restaurant.dk</span>
+                    </p>
+                </article>
+                <form>
+                    <h2>Contact Form</h2>
+                    <div class="formgroup">
+                        <label for="fullname">Full name</label
+                        ><input type="text" name="fullname" id="fullname" />
+                    </div>
+                    <div class="formgroup">
+                        <label for="phone">Phone no.</label
+                        ><input type="tel" name="phone" id="phone" />
+                    </div>
+                    <div class="formgroup">
+                        <label for="email">Email.</label
+                        ><input type="email" name="email" id="email" />
+                    </div>
+                    <div class="formgroup">
+                        <label for="persons">Persons</label
+                        ><input
+                            type="number"
+                            name="persons"
+                            id="persons"
+                            value="2"
+                        />
+                    </div>
+                    <div class="formgroup">
+                        <label for="date">Date and Time</label>
+                        <input type="datetime-local" name="date" id="date" />
+                    </div>
+                    <div class="formgroup">
+                        <label for="furtherinformation"
+                            >Further information</label
+                        >
+                        <textarea
+                            name="furtherinformation"
+                            id="furtherinformation"
+                            cols="30"
+                            rows="5"
+                        ></textarea>
+                    </div>
+                    <input type="submit" value="Send" class="send-btn" />
+                </form>
+            </section>
+            <section>
+                <img src="./restaurant_assets/img/map.jpg" alt="" />
+            </section>
+        </main>
+        <footer><p>&copy 2021-2025 EK Development</p></footer>
+    </body>
+</html>

@@ -1,0 +1,19 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:ital,wght@0,200..900;1,200..900&display=swap");
+
+:root {
+    --brand-color: #e8d389;
+    --secondary-color: #f8eecb;
+    --tertiary-color: #0433a6;
+
+    --highlighter-color: #ff4a60;
+
+    --white: white;
+    --text-color: #202020;
+    --background-grey: #d3d3d3;
+
+    --body-font: "Inter", sans-serif;
+    --heading-font: "Zalando Sans Expanded", sans-serif;
+
+    --max-width: 1280px;
+}
