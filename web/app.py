@@ -74,12 +74,14 @@ def handle_login():
 @app.get("/signup")
 def view_signup():
     message = request.args.get("message", "")
-    return render_template("signup.html", message=message)
+    return render_template("signup.html", message=message, x=x)
 
 ##############################
 @app.post("/signup")
 def handle_signup():
     try:
+        x.validate_user_username()
+        return "ok"
         # Validate
         user_email = x.validate_user_email()
         user_password = x.validate_user_password()
