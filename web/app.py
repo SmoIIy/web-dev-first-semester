@@ -6,6 +6,7 @@ import x
 import time
 import uuid
 import os
+import send_mail
 
 from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True)
@@ -80,22 +81,24 @@ def view_signup():
 @app.post("/signup")
 def handle_signup():
     try:
-        x.validate_user_username()
-        return "ok"
+        # x.validate_user_username()
+        # return """<mixhtml mix-redirect='/tweet'</mixhtml>"""
         # Validate
         user_email = x.validate_user_email()
         user_password = x.validate_user_password()
         user_username = x.validate_user_username()
         user_first_name = x.validate_user_first_name()
-
         user_hashed_password = generate_password_hash(user_password)
+        user_last_name = "Test lastname"
+        user_avatar_path = "path"
 
         # Connect to the database
-        q = "INSERT INTO users VALUES(%s, %s, %s, %s, %s)"
+        q = "INSERT INTO users VALUES(%s, %s, %s, %s, %s, %s, %s)"
         db, cursor = x.db()
-        cursor.execute(q, (None, user_email, user_hashed_password, user_username, user_first_name))
+        cursor.execute(q, (None, user_email, user_hashed_password, user_username, user_first_name, user_last_name, user_avatar_path))
         db.commit()
-        return redirect(url_for("view_login", message="Signup successful. Proceed to login"))
+        send_mail.send_verify_email(user_email)
+        return """<mixhtml mix-redirect='/tweet'</mixhtml>"""
     except Exception as ex:
         ic(ex)
         if ex.args[1] == 400: return redirect(url_for("view_signup", message=ex.args[0]))
@@ -245,5 +248,16 @@ def handle_like_tweet():
         pass
 
 
+##############################
+@app.get("/send-email")
+def send_email(r_email):
+    try:
+        send_mail.send_verify_email(r_email);
+        return "ok"
+    except Exception as ex:
+        ic(ex)
+        return "error"
+    finally:
+        pass
 
 

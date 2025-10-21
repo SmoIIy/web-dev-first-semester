@@ -3,6 +3,10 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="{{url_for('static', filename='app.css')}}"
+        />
         <title>Signup</title>
     </head>
     <body>
@@ -10,12 +14,13 @@
 
         <h2>{{ message }}</h2>
 
-        <form action="/signup" method="POST">
+        <form mix-post action="/signup">
             <input
                 name="user_email"
                 type="text"
                 placeholder="email"
-                value="a@a.com"
+                value="janustest21@gmail.com"
+                mix-check="{{x.REGEX_EMAIL}}"
             />
 
             <div>
@@ -25,6 +30,7 @@
                 >
                 <input
                     name="user_username"
+                    mix-check="{{x.REGEX_USER_USERNAME}}"
                     type="text"
                     placeholder="username"
                     value="santi"
@@ -35,14 +41,19 @@
                 type="text"
                 placeholder="user_first_name"
                 value="Santiago"
+                mix-check="{{x.REGEX_USER_FIRSTNAME}}"
             />
+
             <input
                 name="user_password"
                 type="text"
                 placeholder="password"
                 value="password"
+                mix-check="{{x.REGEX_USER_PASSWORD}}"
             />
+
             <button>Signup</button>
         </form>
+        <script src="{{url_for('static', filename='mixhtml.js')}}"></script>
     </body>
 </html>

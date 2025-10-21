@@ -9,17 +9,19 @@ from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True)
  
 UPLOAD_ITEM_FOLDER = './images'
+
+GOOGLE_PASSWORD = "nzja uqak lifq lkgc"
  
 ##############################
 def db():
     try:
         host = "fullweb.mysql.eu.pythonanywhere-services.com" if "PYTHONANYWHERE_DOMAIN" in os.environ else "mysql"
-        password = "MyPasswordForYou" if "PYTHONANYWHERE_DOMAIN" in os.environ else "password"
+        password = "MyPasswordForYou" if "PYTHONANYWHERE_DOMAIN" in os.environ else "rootpassword"
        
         db = mysql.connector.connect(
-            host = host,
+            host = "mariadb",
             user = "root",  
-            password = password,
+            password = "rootpassword",
             database = "twitter"
         )
         cursor = db.cursor(dictionary=True)
@@ -47,13 +49,22 @@ def validate_user_email():
     user_email = request.form.get("user_email", "").strip()
     if not re.match(REGEX_EMAIL, user_email): raise Exception("Invalid email", 400)
     return user_email
+
+##############################
+USER_FIRSTNAME_MIN = 2
+USER_FIRSTNAME_MAX = 20
+# REGEX_USER_USERNAME = f"^.{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
+# TODO: The username can only be english letters 2 to 20 and contain 1 underscore
+# REGEX_USER_USERNAME = f"^(?!.*_.*_)[A-Za-z_]{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
+REGEX_USER_FIRSTNAME = f"^.{{{USER_FIRSTNAME_MIN},{USER_FIRSTNAME_MAX}}}$"
  
 ##############################
 USER_USERNAME_MIN = 2
 USER_USERNAME_MAX = 20
 # REGEX_USER_USERNAME = f"^.{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
 # TODO: The username can only be english letters 2 to 20 and contain 1 underscore
-REGEX_USER_USERNAME = f"^(?!.*_.*_)[A-Za-z_]{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
+# REGEX_USER_USERNAME = f"^(?!.*_.*_)[A-Za-z_]{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
+REGEX_USER_USERNAME = f"^.{{{USER_USERNAME_MIN},{USER_USERNAME_MAX}}}$"
  
  
 def validate_user_username():
