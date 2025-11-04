@@ -142,7 +142,8 @@ main {
             }
         }
     }
-    .on-tour {
+    .on-tour,
+    .books {
         header {
             background-color: var(--brand-color);
             padding: 1rem;
@@ -154,7 +155,7 @@ main {
                 max-height: 30rem;
                 object-fit: cover;
             }
-            .talks {
+            section {
                 padding: 1rem;
                 display: grid;
                 gap: 1rem;
@@ -191,6 +192,29 @@ main {
                         border-bottom: 0.15rem solid var(--brand-color);
                         border-radius: 0;
                         margin-inline: -1rem;
+                    }
+                }
+                article.book {
+                    position: relative;
+                    min-height: 250px;
+                    img {
+                        float: right;
+                        height: 200px;
+                        width: auto;
+                        margin-inline: 1rem;
+                        margin-top: 1rem;
+                        border-radius: 0.2rem;
+                        @media (max-width: 600px) {
+                            float: none;
+                            margin-inline: auto;
+                            height: 300px;
+                        }
+                    }
+                    .text {
+                        padding: 1rem;
+                        > * + * {
+                            margin-bottom: 0.5rem;
+                        }
                     }
                 }
             }
