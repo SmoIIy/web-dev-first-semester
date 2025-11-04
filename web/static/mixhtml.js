@@ -224,7 +224,7 @@ function mixhtml(){
 // ##############################
 async function mix_fetch(url, method, form, push_to_history=true, el_cover=false, el=false){
     try{
-        console.log("el_cover", el_cover)
+        // console.log("el_cover", el_cover)
         let conn = null
         if( method == "GET" || method == "DELETE" ){
             conn = await fetch(url, {method:method})
@@ -361,7 +361,8 @@ async function mix_fetch(url, method, form, push_to_history=true, el_cover=false
 
 // ##############################
 function mix_convert(){
-    document.querySelectorAll("[mix-url], [mix-get], [mix-post], [mix-patch], [mix-put], [mix-delete], [mix-ttl]").forEach( el => {
+    document.querySelectorAll(`[mix-url], [mix-get], [mix-post], [mix-patch], [mix-put], 
+                                [mix-delete], [mix-ttl], [mix-fade-out], [mix-fade-in]`).forEach( el => {
         try{
             let el_event = "onclick"
             if( el.tagName === "FORM" ){ el_event = "onsubmit" }
@@ -371,11 +372,32 @@ function mix_convert(){
             if( el.hasAttribute("mix-input") ){ el_event = "oninput" }
             if( el.hasAttribute("mix-url") && ! el.getAttribute("mix-on") ){ el.setAttribute("mix-on","yes") }
             if( el.hasAttribute("mix-url") && ! el.hasAttribute("mix-ttl") ){ el.setAttribute("mix-ttl", "0") }
-            if(el.hasAttribute("mix-ttl")){
-                if(el.hasAttribute("mix-fade-out")){ 
-                    const ttl = el.hasAttribute("mix-ttl") ? el.getAttribute("mix-ttl") : 2000
-                    el.setAttribute("style", `animation: mix-fade-out ${ttl}ms forwards;`) 
+        
+            if(el.hasAttribute("mix-fade-out")){ 
+                let ttl = el.getAttribute("mix-fade-out")
+                if( ! /^[0-9]\d*$/.test(ttl) ){
+                    ttl = 2000
                 }
+                el.setAttribute("style", `animation: mix-fade-out ${ttl}ms forwards;`) 
+                setTimeout(()=>{ el.remove() }, ttl)
+                el.removeAttribute("mix-fade-out")                               
+            }
+
+            if(el.hasAttribute("mix-fade-in")){ 
+                let ttl = el.getAttribute("mix-fade-in")
+                if( ! /^[0-9]\d*$/.test(ttl) ){
+                    ttl = 2000
+                }
+                console.log(ttl)
+                el.setAttribute("style", `animation: mix-fade-in ${ttl}ms forwards;`) 
+                el.removeAttribute("mix-fade-in")                               
+                setTimeout(()=>{ el.removeAttribute("style")  }, ttl)                           
+                // el.removeAttribute("style")
+            }
+
+
+            if(el.hasAttribute("mix-ttl")){
+
                 const ttl = el.getAttribute("mix-ttl") || 0
                 if( ! /^[0-9]\d*$/.test(ttl) ){
                     console.log("mix-ttl must be an integer starting from 1")

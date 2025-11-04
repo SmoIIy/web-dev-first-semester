@@ -1,30 +1,26 @@
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
 ##############################
-def send_verify_email(to_email):
+def send_verify_email(to_email, user_verification_key):
     try:
         # Create a gmail fullflaskdemomail
         # Enable (turn on) 2 step verification/factor in the google account manager
         # Visit: https://myaccount.google.com/apppasswords
-        # Copy the key : pdru ctfd jdhk xxci
+        # Copy the key
 
         # Email and password of the sender's Gmail account
-        sender_email = "janustest21@gmail.com"
-        password = "nzja uqak lifq lkgc"  # If 2FA is on, use an App Password instead
+        sender_email = "YOUR GMAIL HERE"
+        password = "APP PASSWORD HERE"  # If 2FA is on, use an App Password instead
 
         # Receiver email address
-        receiver_email = to_email
+        receiver_email = "YOUR GMAIL HERE"
         
         # Create the email message
         message = MIMEMultipart()
         message["From"] = "My company name"
         message["To"] = receiver_email
-        message["Subject"] = "Test email | Please verify your account"
+        message["Subject"] = "Please verify your account"
 
         # Body of the email
-        body = f"""Well Done - Signup Successful"""
+        body = f"""To verify your account, please <a href="http://127.0.0.1/verify/{user_verification_key}">click here</a>"""
         message.attach(MIMEText(body, "html"))
 
         # Connect to Gmail's SMTP server and send the email
@@ -37,6 +33,6 @@ def send_verify_email(to_email):
         return "email sent"
        
     except Exception as ex:
-        pass
+        raise_custom_exception("cannot send email", 500)
     finally:
         pass
