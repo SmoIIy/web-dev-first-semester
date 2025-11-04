@@ -6,9 +6,11 @@ en_one = "Don't have an account"
 dk_one = "Har du ikke en konto"
 sp_one = "No tienes una cuenta"
 
-en_error = "Don't have an account"
-dk_error = "Har du ikke en konto"
-sp_error = "No tienes una cuenta"
+en_error = "User not Found"
+dk_error = "Bruger ikke fundet"
+sp_error = "Usuario no Encontrado"
+
+
 
 
 
