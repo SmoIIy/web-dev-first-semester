@@ -13,29 +13,56 @@
   <div class="x-landing__right">
     
     <div class="x-dialog__content">
+
+
+      <div class="d-flex gap-3">
+
+        {% if lan != "en": %}
+        <a href="/signup/en">
+          <img src="/static/images/flag_english.png" class="w-5">
+        </a>
+        {% endif %}
+
+        {% if lan != "dk": %}
+        <a href="/signup/dk">
+          <img src="/static/images/flag_danish.png" class="w-5">
+        </a>
+        {% endif %}
+
+        {% if lan != "sp": %}
+        <a href="/signup/sp">
+          <img src="/static/images/flag_spanish.png" class="w-5">
+        </a>
+        {% endif %}        
+
+      </div>
+
         <h2 id="loginTitle">Sign up to X</h2>
         <form class="x-dialog__form" action="{{ url_for('signup') }}" mix-post autocomplete="off">
+
             <div>
               <label for="user_email">
-                <span>Email</span>
+                <span>
+                  {{ dictionary.email[lan] }}
+                </span>
               </label>
               <input name="user_email" id="user_email" type="text" mix-check="{{ x.REGEX_EMAIL }}">
             </div>
             <div>
               <label for="user_username">
-                <span>Username</span> - {{ x.USER_USERNAME_MIN }} to {{ x.USER_USERNAME_MAX }} characters
+                <span>{{ dictionary.username[lan] }}</span> - {{ x.USER_USERNAME_MIN }} to {{ x.USER_USERNAME_MAX }} characters
               </label>
               <input name="user_username" id="user_username" type="text" mix-check="{{ x.REGEX_USER_USERNAME }}">
             </div>
             <div>
               <label for="user_first_name">
-                <span>User first name</span> - {{ x.USER_FIRST_NAME_MIN }} to {{ x.USER_FIRST_NAME_MAX }} characters
+                <span>{{ dictionary.first_name[lan] }}</span> - {{ x.USER_FIRST_NAME_MIN }} to {{ x.USER_FIRST_NAME_MAX }} characters
               </label>
               <input name="user_first_name" id="user_first_name" type="text" mix-check="{{ x.REGEX_USER_USERNAME }}">
             </div>            
             <div>
               <label for="password">
-                <span>Password</span> - {{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} characters
+                <span>{{ dictionary.password[lan] }}</span> - {{ x.USER_PASSWORD_MIN }} to {{ x.USER_PASSWORD_MAX }} characters
               </label>              
               <input name="user_password" id="password" type="password" mix-check="{{ x.REGEX_USER_PASSWORD }}">
             </div>

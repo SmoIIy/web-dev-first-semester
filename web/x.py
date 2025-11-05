@@ -1,6 +1,7 @@
 from flask import request, make_response, render_template
 import mysql.connector
 import re 
+import dictionary
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -20,9 +21,8 @@ def db():
             host = "mariadb",
             user = "root",  
             password = "rootpassword",
-            database = "x" 
+            database = "x"
         )
-        ic(db)
         cursor = db.cursor(dictionary=True)
         return db, cursor
     except Exception as e:
@@ -44,9 +44,9 @@ def no_cache(view):
 
 ##############################
 REGEX_EMAIL = "^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$"
-def validate_user_email():
+def validate_user_email(lan = "en"):
     user_email = request.form.get("user_email", "").strip()
-    if not re.match(REGEX_EMAIL, user_email): raise Exception("Invalid email", 400)
+    if not re.match(REGEX_EMAIL, user_email): raise Exception(dictionary.invalid_email[lan], 400)
     return user_email
 
 ##############################
@@ -75,9 +75,9 @@ def validate_user_first_name():
 USER_PASSWORD_MIN = 6
 USER_PASSWORD_MAX = 50
 REGEX_USER_PASSWORD = f"^.{{{USER_PASSWORD_MIN},{USER_PASSWORD_MAX}}}$"
-def validate_user_password():
+def validate_user_password(lan = "en"):
     user_password = request.form.get("user_password", "").strip()
-    if not re.match(REGEX_USER_PASSWORD, user_password): raise Exception("Invalid password", 400)
+    if not re.match(REGEX_USER_PASSWORD, user_password): raise Exception(dictionary.invalid_password[lan], 400)
     return user_password
 
 

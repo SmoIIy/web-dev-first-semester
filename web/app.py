@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_session import Session
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
@@ -35,36 +35,36 @@ def view_index():
 
 ##############################
 @app.route("/login", methods=["GET", "POST"])
-@app.route("/login/<lang>", methods=["GET", "POST"])
+@app.route("/login/<lan>", methods=["GET", "POST"])
 @x.no_cache
-def login(lang="en"):
+def login(lan = "en"):
+
+    if lan not in dictionary.allowed_languages: lan = "en"
+
     if request.method == "GET":
         if session.get("user", ""): return redirect(url_for("home"))
-        if lang not in dictionary.allowed_languages: lang="en"
-        return render_template("login.html", x=x, dictionary=dictionary, lang=lang)
+        return render_template("login.html", x=x, dictionary=dictionary, lan=lan)
 
     if request.method == "POST":
         try:
             # Validate           
-            user_email = x.validate_user_email()
-            user_password = x.validate_user_password()
+            user_email = x.validate_user_email(lan)
+            user_password = x.validate_user_password(lan)
             # Connect to the database
             q = "SELECT * FROM users WHERE user_email = %s"
             db, cursor = x.db()
             cursor.execute(q, (user_email,))
             user = cursor.fetchone()
-            ic(lang)
-            message = dictionary.__dict__.get(f"{lang}_error", "cock and balls")
-            ic(message)
-            if not user: raise Exception(message, 400)
+            if not user: raise Exception(dictionary.user_not_found[lan], 400)
 
             if not check_password_hash(user["user_password"], user_password):
-                raise Exception("Invalid credentials", 400)
+                raise Exception(dictionary.invalid_credentials[lan], 400)
 
             if user["user_verification_key"] != "":
-                raise Exception("User not verified. Please check your email", 400)
+                raise Exception(dictionary.user_not_verified[lan], 400)
 
             user.pop("user_password")
+            user["user_language"] = lan
 
             session["user"] = user
             return f"""<browser mix-redirect="/home"></browser>"""
@@ -90,10 +90,14 @@ def login(lang="en"):
 
 ##############################
 @app.route("/signup", methods=["GET", "POST"])
-def signup():
+@app.route("/signup/<lan>", methods=["GET", "POST"])
+def signup(lan = "en"):
+
+    if lan not in dictionary.allowed_languages: lan = "en"
+
 
     if request.method == "GET":
-        return render_template("signup.html", x=x)
+        return render_template("signup.html", x=x, dictionary=dictionary, lan=lan)
 
     if request.method == "POST":
         try:
@@ -172,7 +176,9 @@ def home():
         suggestions = cursor.fetchall()
         ic(suggestions)
 
-        return render_template("home.html", tweets=tweets, trends=trends, suggestions=suggestions, user=user)
+        lan = session["user"]["user_language"]
+
+        return render_template("home.html", tweets=tweets, trends=trends, suggestions=suggestions, user=user, lan=lan, dictionary=dictionary)
     except Exception as ex:
         ic(ex)
         return "error"
@@ -243,7 +249,8 @@ def home_comp():
 
 ##############################
 @app.get("/profile")
-def profile():
+def profile(lan = "en"):
+    #if lan not in dictionary.allowed_languages: lan = "en"
     try:
         user = session.get("user", "")
         if not user: return "error"
@@ -251,7 +258,9 @@ def profile():
         db, cursor = x.db()
         cursor.execute(q, (user["user_pk"],))
         user = cursor.fetchone()
-        profile_html = render_template("_profile.html", x=x, user=user)
+        #user["user_language"] = lan
+        lan = session["user"]["user_language"]
+        profile_html = render_template("_profile.html", x=x, user=user, lan=lan, dictionary=dictionary)
         return f"""<browser mix-update="main">{ profile_html }</browser>"""
     except Exception as ex:
         ic(ex)
@@ -336,7 +345,7 @@ def api_update_profile():
 
         user = session.get("user", "")
         if not user: return "invalid user"
-
+        lan = session["user"]["user_language"]
         # Validate
         user_email = x.validate_user_email()
         user_username = x.validate_user_username()
@@ -347,9 +356,9 @@ def api_update_profile():
         db, cursor = x.db()
         cursor.execute(q, (user_email, user_username, user_first_name, user["user_pk"]))
         db.commit()
-
+        
         # Response to the browser
-        toast_ok = render_template("___toast_ok.html", message="Profile updated successfully")
+        toast_ok = render_template("___toast_ok.html", message=dictionary.update_profile_ok[lan])
         return f"""
             <browser mix-bottom="#toast">{toast_ok}</browser>
             <browser mix-update="#profile_tag .name">{user_first_name}</browser>
@@ -365,10 +374,10 @@ def api_update_profile():
         
         # Database errors
         if "Duplicate entry" and user_email in str(ex): 
-            toast_error = render_template("___toast_error.html", message="Email already registered")
+            toast_error = render_template("___toast_error.html", message=dictionary.update_profile_error_email_already_exists[lan])
             return f"""<mixhtml mix-update="#toast">{ toast_error }</mixhtml>""", 400
         if "Duplicate entry" and user_username in str(ex): 
-            toast_error = render_template("___toast_error.html", message="Username already registered")
+            toast_error = render_template("___toast_error.html", message=dictionary.update_profile_error_user_already_exists[lan])
             return f"""<mixhtml mix-update="#toast">{ toast_error }</mixhtml>""", 400
         
         # System or developer error
@@ -380,27 +389,49 @@ def api_update_profile():
         if "db" in locals(): db.close()
 
 
+# ##############################
+# @app.post("/api-search")
+# def api_search():
+#     try:
+#         # TODO: The input search_for must be validated
+#         search_for = request.form.get("search_for", "")
+#         if not search_for:
+#             return """
+#             <browser mix-remove="#search_results"></browser>
+#             """
+#         part_of_query = f"%{search_for}%"
+#         ic(search_for)
+#         db, cursor = x.db()
+#         q = "SELECT * FROM users WHERE user_username LIKE %s"
+#         cursor.execute(q, (part_of_query,))
+#         users = cursor.fetchall()
+#         orange_box = render_template("_orange_box.html", users=users)
+#         return f"""
+#             <browser mix-remove="#search_results"></browser>
+#             <browser mix-bottom="#search_form">{orange_box}</browser>
+#         """
+#     except Exception as ex:
+#         ic(ex)
+#         return str(ex)
+#     finally:
+#         if "cursor" in locals(): cursor.close()
+#         if "db" in locals(): db.close()
+
+
 ##############################
 @app.post("/api-search")
 def api_search():
     try:
         # TODO: The input search_for must be validated
         search_for = request.form.get("search_for", "")
-        if not search_for:
-            return """
-            <browser mix-remove="#search_results"></browser>
-            """
+        if not search_for: return """empty search field""", 400
         part_of_query = f"%{search_for}%"
         ic(search_for)
         db, cursor = x.db()
         q = "SELECT * FROM users WHERE user_username LIKE %s"
         cursor.execute(q, (part_of_query,))
         users = cursor.fetchall()
-        orange_box = render_template("_orange_box.html", users=users)
-        return f"""
-            <browser mix-remove="#search_results"></browser>
-            <browser mix-bottom="#search_form">{orange_box}</browser>
-        """
+        return jsonify(users)
     except Exception as ex:
         ic(ex)
         return str(ex)

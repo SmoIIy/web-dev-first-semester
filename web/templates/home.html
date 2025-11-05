@@ -34,29 +34,29 @@
 
                 <li>
                     <a href="/home-comp" mix-get><i class="fa-solid fa-house"></i>
-                        <span class="pointer-e-none">Home</span>
+                        <span class="pointer-e-none">{{ dictionary.home[lan] }}</span>
                     </a>
                 </li>
 
 
-                <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i><span>Explore</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-bell"></i><span>Notifications</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-envelope"></i><span>Messages</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-atom"></i><span>Grok</span></a></li>
-                <li><a href="#"><i class="fa-regular fa-bookmark"></i><span>Bookmarks</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>Jobs</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-users"></i><span>Communities</span></a></li>
-                <li><a href="#"><i class="fa-solid fa-star"></i><span>Premium</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-magnifying-glass"></i><span>{{ dictionary.explore[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bell"></i><span>{{ dictionary.notifications[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-envelope"></i><span>{{ dictionary.messages[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-atom"></i><span>{{ dictionary.grok[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-regular fa-bookmark"></i><span>{{ dictionary.bookmarks[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-briefcase"></i><span>{{ dictionary.jobs[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-users"></i><span>{{ dictionary.communities[lan] }}</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-star"></i><span>{{ dictionary.premium[lan] }}</span></a></li>
 
                 <li>
                     <a href="/profile" mix-get mix-default="<i class='fa-regular fa-user'></i> Profile" mix-await="Loading ...">
                         <i class="fa-regular fa-user"></i>
-                        <span class="pointer-e-none">Profile</span>
+                        <span class="pointer-e-none">{{ dictionary.profile[lan] }}</span>
                     </a>
                 </li>
 
-                <li><a href="#"><i class="fa-solid fa-ellipsis"></i><span>More</span></a></li>
-                <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></a></li>
+                <li><a href="#"><i class="fa-solid fa-ellipsis"></i><span>{{ dictionary.more[lan] }}</span></a></li>
+                <li><a href="{{ url_for('logout') }}"><i class="fa-solid fa-right-from-bracket"></i><span>{{ dictionary.logout[lan] }}</span></a></li>
             </ul>
 
             <button class="post-btn">Post</button>
@@ -82,8 +82,16 @@
 
         <aside>
             <form id="search_form" class="p-relative">
-                <input mix-post="/api-search" mix-input mix-delay="1000" name="search_for" type="text" placeholder="Search Twitter">
+                <!-- <input mix-post="/api-search" mix-input mix-delay="300" name="search_for" type="text" placeholder="Search Twitter"> -->
+                <input id="txt_search_for" name="search_for" type="text" placeholder="Search Twitter" 
+                oninput="get_search_results('/api-search', 'post', '#search_form', 'parse_search_results')">
                 <button class="cursor-pointer">Search</button>                             
+            
+                <div id="search_results" class="
+                d-none
+                p-absolute top-8 left-0 w-full bg-c-white h-50 pa-4
+                border-1 border-c-gray:+50 rounded-sm">
+                </div>
             </form>
 
             <div class="border-1 border-c-gray:+50 rounded-md pa-3">
