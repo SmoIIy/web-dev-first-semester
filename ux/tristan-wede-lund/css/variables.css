@@ -4,6 +4,7 @@
     --brand-color: #b97375;
     --secondary-color: #ceb1be;
     --tertiary-color: #2d2d34;
+    --tertiary-color-hover: rgba(0, 0, 0, 0.596);
 
     --highlighter-color: #e2dcde;
     --highlighter-color-2: #f1e4e8;
@@ -15,4 +16,6 @@
     --body-font: "Open Sans", sans-serif;
 
     --max-width: 1280px;
+
+    --transition: all 200ms ease;
 }
