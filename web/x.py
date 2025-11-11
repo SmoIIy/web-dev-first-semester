@@ -2,6 +2,7 @@ from flask import request, make_response, render_template
 import mysql.connector
 import re 
 import dictionary
+import json
 
 import smtplib
 from email.mime.multipart import MIMEMultipart
@@ -11,6 +12,17 @@ from functools import wraps
 
 from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True)
+
+google_spread_sheet_key = "1FDPWb-0I4lIfRUWtpoB8aIB7iJgUqwpv843m98Y_7Pk"
+allowed_languages = ["english", "danish", "spanish"]
+default_language = "english"
+
+##############################
+ 
+def lans(key):
+    with open("dictionary.json", 'r', encoding='utf-8') as file:
+        data = json.load(file)
+    return data[key][default_language]
 
 UPLOAD_ITEM_FOLDER = './images'
 

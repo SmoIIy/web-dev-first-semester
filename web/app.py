@@ -7,6 +7,10 @@ import time
 import uuid
 import os
 import dictionary
+import requests
+import io
+import csv
+import json
 
 from icecream import ic
 ic.configureOutput(prefix=f'----- | ', includeContext=True)
@@ -34,16 +38,25 @@ def view_index():
     return render_template("index.html")
 
 ##############################
+@app.context_processor
+def global_variables():
+    return dict (
+        dictionary = dictionary,
+        x = x
+    )
+
+##############################
 @app.route("/login", methods=["GET", "POST"])
 @app.route("/login/<lan>", methods=["GET", "POST"])
 @x.no_cache
-def login(lan = "en"):
+def login(lan = "english"):
 
-    if lan not in dictionary.allowed_languages: lan = "en"
+    if lan not in x.allowed_languages: lan = "english"
+    x.default_language = lan
 
     if request.method == "GET":
         if session.get("user", ""): return redirect(url_for("home"))
-        return render_template("login.html", x=x, dictionary=dictionary, lan=lan)
+        return render_template("login.html", lan=lan)
 
     if request.method == "POST":
         try:
@@ -438,3 +451,53 @@ def api_search():
     finally:
         if "cursor" in locals(): cursor.close()
         if "db" in locals(): db.close()
+
+##############################
+@app.get("/get-data-from-sheet")
+def get_data_from_sheet():
+    try:
+ 
+        # Check if the admin is running this end-point, else show error
+ 
+        # flaskwebmail
+        # Create a google sheet
+        # share and make it visible to "anyone with the link"
+        # In the link, find the ID of the sheet. Here: 1aPqzumjNp0BwvKuYPBZwel88UO-OC_c9AEMFVsCw1qU
+        # Replace the ID in the 2 places bellow
+        url= f"https://docs.google.com/spreadsheets/d/{x.google_spread_sheet_key}/export?format=csv&id={x.google_spread_sheet_key}"
+        res=requests.get(url=url)
+        # ic(res.text) # contains the csv text structure
+        csv_text = res.content.decode('utf-8')
+        csv_file = io.StringIO(csv_text) # Use StringIO to treat the string as a file
+       
+        # Initialize an empty list to store the data
+        data = {}
+ 
+        # Read the CSV data
+        reader = csv.DictReader(csv_file)
+        ic(reader)
+        # Convert each row into the desired structure
+        for row in reader:
+            item = {
+                    'english': row['english'],
+                    'danish': row['danish'],
+                    'spanish': row['spanish']
+               
+            }
+            # Append the dictionary to the list
+            data[row['key']] = (item)
+ 
+        # Convert the data to JSON
+        json_data = json.dumps(data, ensure_ascii=False, indent=4)
+        # ic(data)
+ 
+        # Save data to the file
+        with open("dictionary.json", 'w', encoding='utf-8') as f:
+            f.write(json_data)
+ 
+        return "ok"
+    except Exception as ex:
+        ic(ex)
+        return str(ex)
+    finally:
+        pass
